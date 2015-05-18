@@ -18,6 +18,17 @@ var eventSchema = mongoose.Schema({
   //eventId: String,
   eventName: String,
   eventTime: Date,
+  questions:[
+    question1:{
+        question: String,
+        yes: Number,
+        no: Number
+        actual: 
+    },
+    question2:{
+
+    },
+  ],
   bets: [guessSchema]
 });
 
