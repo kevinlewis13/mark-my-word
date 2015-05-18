@@ -1,4 +1,15 @@
+<<<<<<< HEAD
 **/db/
+=======
+<<<<<<< HEAD
+>>>>>>> 6ae82904719eef5e2b78a278b2ea3cbbdb0d83c6
 **/node_modules/*
 **/*.log
 .env
+<<<<<<< HEAD
+=======
+=======
+node_modules
+db
+>>>>>>> 1a108abcba6de44d79215644d7521cbacff73714
+>>>>>>> 6ae82904719eef5e2b78a278b2ea3cbbdb0d83c6
