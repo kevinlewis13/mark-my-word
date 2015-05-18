@@ -20,9 +20,9 @@ var userRouter = express.Router();
 app.use(passport.initialize());
 strategy(passport);
 
-userRoutes(userRouter);
+userRoutes(userRouter, passport);
 
-app.use('/', userRouter, passport);
+app.use('/', userRouter);
 
 app.listen(port, function() {
   console.log('Server started on ' + port + '.');
