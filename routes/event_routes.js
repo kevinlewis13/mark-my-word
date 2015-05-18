@@ -8,6 +8,7 @@ module.exports = function (router) {
 
   router.post('/events', function (req, res) {
     var newEvent = new Event(req.body);
+    newEvent.eventTime = Date.parse(req.body.eventTime);
     newEvent.save(function (err, data) {
       if (err) {
         console.log(err);
@@ -18,7 +19,10 @@ module.exports = function (router) {
   });
 
   router.get('/events', function (req, res) {
-    Event.find({}, function (err, data) {
+    var now = Date.now();
+    var dayOut = Date.now() + 86400000;
+
+    Event.find({eventTime: {$gt: now, $lt: dayOut}}, function (err, data) {
       if (err) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
@@ -27,4 +31,3 @@ module.exports = function (router) {
     });
   });
 };
-
