@@ -15,9 +15,13 @@ var userSchema = new mongoose.Schema({
 	wins: Number,
 	losses: Number,
 	bets: Number,
-	record: Number,
+	record: Number
 	events: []
 });
+
+userSchema.methods.generateRecord = function() {
+	return this.record = this.wins/this.bets;
+};
 
 userSchema.methods.generateTokenId = function() {
 	this.tokenId = Date.now();
