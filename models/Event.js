@@ -18,20 +18,20 @@ var eventSchema = mongoose.Schema({
   //eventId: String,
   eventName: String,
   eventTime: Date,
-  questions:[
-        {
-        question: String,
+  questions:{
+        question1:{
+        title: String,
         yes: Number,
         no: Number,
         actual: Boolean 
     },
-    {
-        question: String,
+    question2:{
+        title: String,
         yes: Number,
         no: Number,
         actual: Boolean 
     }
-  ],
+  },
   bets: [guessSchema]
 });
 
