@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 			}
 		},
 
-		nodemond:{
+		nodemon:{
 			dev:{
 				src: srcFiles
 			}

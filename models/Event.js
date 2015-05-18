@@ -15,9 +15,9 @@ var guessSchema = mongoose.Schema({
 });
 
 var eventSchema = mongoose.Schema({
-  eventId: String,
+  //eventId: String,
   eventName: String,
-  eventTime; Date,
+  eventTime: Date,
   bets: [guessSchema]
 });
 
