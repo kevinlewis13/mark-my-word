@@ -3,12 +3,18 @@ var User = require('../models/User');
 var bodyParser = require('body-parser');
 var validator = require('email-validator');
 
-module.exports = function(router) {
+module.exports = function(router, passport) {
   router.use(bodyParser.json());
 
-  router.get('/login', function(req, res) {
+  router.get('/login', passport.authenticate('basic', {session: false}), function(req, res) {
     res.json({msg: 'login hit'});
-
+    req.user.generateToken(process.env.APP_SECRET, function(err, token) {
+    	if(err) {
+    		console.log(err);
+    		return res.status(500).json({msg: 'error generating token'})
+    	}
+    	res.json({token: token});
+    });
   });
 
   // To create a new user send an object with username, password and email
@@ -36,7 +42,5 @@ module.exports = function(router) {
         res.json({msg: 'Account created'});
       });
     });
-
   });
-
 };
