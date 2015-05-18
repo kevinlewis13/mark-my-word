@@ -21,6 +21,10 @@ var eventSchema = mongoose.Schema({
   bets: [guessSchema]
 });
 
+eventSchema.methods.void = function(date) {
+  return date > this.eventTime;
+};
+
 module.exports = mongoose.model('Event', eventSchema);
 
     // first: {
