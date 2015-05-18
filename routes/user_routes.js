@@ -11,7 +11,7 @@ module.exports = function(router, passport) {
     req.user.generateToken(process.env.APP_SECRET, function(err, token) {
     	if(err) {
     		console.log(err);
-    		return res.status(500).json({msg: 'error generating token'})
+    		return res.status(500).json({msg: 'error generating token'});
     	}
     	res.json({token: token});
     });
