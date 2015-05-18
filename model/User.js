@@ -2,15 +2,12 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var uuid = require('uuid');
-var eat = require('eat');
-
 
 var userSchema = new mongoose.Schema({
-	username: {type: String, required:true, unique:true, trim:true},
+	username: {type: String, required:{'Username required'}, unique:{'Username already in use'}, trim:true},
 	basic:{
-		email: {type: String, unique: true, required: true},
-		password:{type: String, unique:true, required: true}
+		email: {type: String, required: {'Email field required'}, unique:{'Email already in use'}},
+		password:{type: String, required: {'Password required'}}
 	},
 	location: String,
 	wins: Number,
@@ -21,6 +18,9 @@ var userSchema = new mongoose.Schema({
 	events: []
 });
 
+userSchema.methods.generateId = function() {
+	this.tokenId = Date.now();
+}
 
 userSchema.methods.generateHash = function(password, callback) {
 	bcrypt.genSalt(8, function(err, salt) {
@@ -43,4 +43,4 @@ userSchema.methods.checkPassword = function(password, callback) {
 };
 
 
-
+module.exports = mongoose.model('User', userSchema);
