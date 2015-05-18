@@ -27,7 +27,7 @@ var userSchema = new mongoose.Schema({
 	wins: Number,
 	losses: Number,
 	bets: Number,
-	record: Number
+	record: Number,
 	events: []
 });
 
