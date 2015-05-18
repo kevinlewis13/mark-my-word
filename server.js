@@ -10,7 +10,7 @@ var userRoutes = require('./routes/user_routes');
 
 var port = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/mmw_dev');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mmw_dev');
 
 var userRouter = express.Router();
 
