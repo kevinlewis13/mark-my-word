@@ -2,6 +2,8 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var uuid = require('uuid');
+var eat = require('eat');
 
 var userSchema = new mongoose.Schema({
 	username: {
@@ -21,7 +23,7 @@ var userSchema = new mongoose.Schema({
 			required:true
 		}
 	},
-	tokenId: Number,
+	uuid: String,
 	city: String,
 	state: String,
 	wins: Number,
@@ -35,8 +37,8 @@ userSchema.methods.generateRecord = function() {
 	return this.record = this.wins/this.bets;
 };
 
-userSchema.methods.generateTokenId = function() {
-	this.tokenId = Date.now();
+userSchema.methods.generateUuid = function() {
+	this.uuid = uuid.v1();
 };
 
 userSchema.methods.generateHash = function(password, callback) {
@@ -57,6 +59,16 @@ userSchema.methods.checkPassword = function(password, callback) {
 		}
 		callback(err, res);
 	});
+};
+
+userSchema.methods.generateToken = function(secret, callback) {
+	eat.encode({id: this.uuid, timestamp: Date.now()}, secret,
+		function(err, data) {
+    	if (err) {
+    		return callback(err);
+    	}
+    	return callback(null, data);
+	  });
 };
 
 module.exports = mongoose.model('User', userSchema);
