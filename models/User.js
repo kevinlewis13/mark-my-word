@@ -32,7 +32,7 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateRecord = function() {
-	this.record = this.wins/this.bets;
+	return this.record = this.wins/this.bets;
 };
 
 userSchema.methods.generateTokenId = function() {
@@ -43,7 +43,7 @@ userSchema.methods.generateHash = function(password, callback) {
 	bcrypt.genSalt(8, function(err, salt) {
 		bcrypt.hash(password, salt, null, function(err, hash) {
 			if(err) {
-				console.log(err);
+				return console.log(err);
 			}
 			callback(err, hash);
 		});
@@ -53,7 +53,7 @@ userSchema.methods.generateHash = function(password, callback) {
 userSchema.methods.checkPassword = function(password, callback) {
 	bcrypt.compare(password, this.basic.password, function(err, res) {
 		if(err) {
-			console.log(err);
+			return console.log(err);
 		}
 		callback(err, res);
 	});
