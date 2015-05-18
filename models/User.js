@@ -32,7 +32,7 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateRecord = function() {
-	return this.record = this.wins/this.bets;
+	this.record = this.wins/this.bets;
 };
 
 userSchema.methods.generateTokenId = function() {
