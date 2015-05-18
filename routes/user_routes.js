@@ -3,12 +3,13 @@ var User = require('../models/User');
 var bodyParser = require('body-parser');
 var validator = require('email-validator');
 
-module.exports = function(router) {
+module.exports = function(router, passport) {
   router.use(bodyParser.json());
 
-  router.get('/login', function(req, res) {
-    res.json({msg: 'login hit'});
-  });
+  router.get('/login', passport.authenticate('basic', {session: false}),
+    function(req, res) {
+      res.json({msg: 'user login successful'});
+    });
 
   // To create a new user send an object with username, password and email
   // properties.
