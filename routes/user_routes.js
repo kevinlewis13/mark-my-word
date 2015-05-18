@@ -16,7 +16,6 @@ module.exports = function(router, passport) {
     	res.json({token: token});
     });
   });
-
   // To create a new user send an object with username, password and email
   // properties.
   router.post('/createuser', function(req, res) {
