@@ -1,13 +1,12 @@
 module.exports = function(grunt) {
 
-	grunt.loadNpmTask('grunt-contrib-jshint');
-	grunt.loadNpmTask('grunt-simple-mocha');
-	grunt.loadNpmTask('grunt-nodemon');
-
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-simple-mocha');
+	grunt.loadNpmTasks('grunt-nodemon');
 
 	var srcFiles = ['Gruntfile.js', './models/**/*.js', './test/**/*test.js'];
 
-	grunt.intiConfig({
+	grunt.initConfig({
 
 		jshint:{
 			dev:{
@@ -15,7 +14,7 @@ module.exports = function(grunt) {
 			},
 
 			options:{
-				jshint:true
+				jshintrc:true
 			}
 		},
 
@@ -31,4 +30,7 @@ module.exports = function(grunt) {
 			}
 		}
 	});
+
+	grunt.registerTask('test', ['jshint:dev', 'simplemocha:dev']);
+	grunt.registerTask('default', ['test']);
 };
