@@ -1,4 +1,15 @@
+<<<<<<< HEAD
 **/db/
+=======
+<<<<<<< HEAD
+>>>>>>> user_routes
 **/node_modules/*
 **/*.log
 .env
+<<<<<<< HEAD
+=======
+=======
+node_modules
+db
+>>>>>>> 1a108abcba6de44d79215644d7521cbacff73714
+>>>>>>> user_routes
