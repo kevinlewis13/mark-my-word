@@ -7,16 +7,16 @@ var eat = require('eat');
 
 
 var userSchema = new mongoose.Schema({
-	username: String,
+	username: {type: String, required:true, unique:true, trim:true},
 	basic:{
 		email: {type: String, unique: true, required: true},
 		password:{type: String, unique:true, required: true}
-	}
+	},
 	location: String,
 	wins: Number,
 	losses: Number,
 	bets: Number,
-	record: this.wins/this.bets,
+	record: Number,
 	tokenId: String,
 	events: []
 });
@@ -40,7 +40,7 @@ userSchema.methods.checkPassword = function(password, callback) {
 		}
 		callback(err, res);
 	});
-}
+};
 
 
 
