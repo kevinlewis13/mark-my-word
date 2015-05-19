@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-simple-mocha');
 	grunt.loadNpmTasks('grunt-nodemon');
 
-	var srcFiles = ['Gruntfile.js', './models/**/*.js', './test/**/*test.js'];
+	var srcFiles = ['Gruntfile.js', './models/**/*.js', './routes/**/*.js', './lib/**/*.js', 'server.js', './test/**/*test.js'];
 
 	grunt.initConfig({
 
