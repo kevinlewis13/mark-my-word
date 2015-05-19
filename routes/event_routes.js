@@ -35,6 +35,16 @@ module.exports = function (router) {
     });
   });
 
+  router.get('/events/:id', function (req, res) {
+    Event.find({'_id': req.params.id}, function(err, data) {
+      if(err) {
+        console.log(err);
+        return res.status(500).json({msg:'internal server error'});
+      }
+      res.status(200).json(data);
+    });
+  });
+
   router.put('/events/:id', function(req, res) {
     var update = req.body;
 
