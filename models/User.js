@@ -8,19 +8,19 @@ var eat = require('eat');
 var userSchema = new mongoose.Schema({
 	username: {
 		type: String,
-		required:true,
-		unique:true,
-		trim:true
+		required: 'A unique username is required',
+		unique: true,
+		trim: true
 	},
 	basic:{
 		email: {
 			type: String,
-			required:true,
-			unique:true
+			required: 'A unique email address is required',
+			unique: true
 		},
 		password:{
 			type: String,
-			required:true
+			required: true
 		}
 	},
 	uuid: String,
