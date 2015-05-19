@@ -9,7 +9,7 @@ module.exports = function (router) {
   router.post('/events', function (req, res) {
     var newEvent = new Event(req.body);
     var question = {};
-    question.title = req.body.question;
+    question.question = req.body.question;
     newEvent.questions.push(question);
     newEvent.eventTimeUnix = Date.parse(req.body.eventTime);
     newEvent.eventTimeString = req.body.eventTime;
