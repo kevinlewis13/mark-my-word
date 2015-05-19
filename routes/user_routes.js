@@ -8,12 +8,12 @@ module.exports = function(router, passport) {
   router.use(bodyParser.json());
 
   router.get('/login', passport.authenticate('basic', {session: false}), function(req, res) {
-    req.user.generateToken(process.env.APP_SECRET, function(err, data) {
+    req.user.generateToken(process.env.APP_SECRET, function(err, token) {
     	if(err) {
     		console.log(err);
     		return res.status(500).json({msg: 'error generating token'});
     	}
-    	res.status(200).json({token: data});
+    	res.status(200).json({token: token});
     });
   });
 
@@ -42,18 +42,18 @@ module.exports = function(router, passport) {
         return res.status(500).json({msg: 'Account could not be created'});
       }
       newUser.basic.password = hash;
-      newUser.save(function(err, data) {
+      newUser.save(function(err, user) {
         if (err) {
           console.log(err);
-          return res.status(500).json({msg: err});
+          return res.status(500).json({msg: 'Account could not be created'});
         }
         // Return a token
-        newUser.generateToken(process.env.APP_SECRET, function(err, data) {
+        newUser.generateToken(process.env.APP_SECRET, function(err, token) {
           if (err) {
             console.log(err);
-            return res.status(500).json({msg: 'Internal Service Error'});
+            return res.status(500).json({msg: 'Internal Server Error'});
           }
-          res.status(200).json({token: data});
+          res.status(200).json({token: token});
         });
       });
     });
