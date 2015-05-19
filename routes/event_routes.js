@@ -26,7 +26,7 @@ module.exports = function (router) {
     var now = Date.now();
     var dayOut = Date.now() + 86400000;
 
-    Event.find({eventTime: {$gt: now, $lt: dayOut}}, function (err, data) {
+    Event.find({eventTimeUnix: {$gt: now, $lt: dayOut}}, function (err, data) {
       if (err) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
