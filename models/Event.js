@@ -2,37 +2,20 @@
 
 var mongoose = require('mongoose');
 
-var guessSchema = mongoose.Schema({
-  title: String,
-  yes: {
-    userIds: [String],
-    total: Number
-  },
-  no: {
-    userIds: [String],
-    total: Number
-  }
-});
-
 var eventSchema = mongoose.Schema({
-  //eventId: String,
+  eventId: String,
   eventName: String,
-  eventTime: Date,
+  eventTimeUnix: Number,
+  eventTimeString:String,
+  location: String,
   questions:[
         {
         question: String,
-        yes: Number,
-        no: Number,
-        actual: Boolean 
-    },
-    {
-        question: String,
-        yes: Number,
-        no: Number,
+        yes: [String],
+        no: [String],
         actual: Boolean 
     }
-  ],
-  bets: [guessSchema]
+  ]
 });
 
 eventSchema.methods.void = function(date) {
@@ -41,53 +24,4 @@ eventSchema.methods.void = function(date) {
 
 module.exports = mongoose.model('Event', eventSchema);
 
-    // first: {
-    //   yes: {
-    //     userIds: [String],
-    //     total: Number
-    //   },
-    //   no: {
-    //     userIds: [String],
-    //     total: Number
-    //   }
-    // },
-    // second: {
-    //   yes: {
-    //     userIds: [String],
-    //     total: Number
-    //   },
-    //   no: {
-    //     userIds: [String],
-    //     total: Number
-    //   }
-    // },
-    // third: {
-    //   yes: {
-    //     userIds: [String],
-    //     total: Number
-    //   },
-    //   no: {
-    //     userIds: [String],
-    //     total: Number
-    //   }
-    // },
-    // fourth: {
-    //   yes: {
-    //     userIds: [String],
-    //     total: Number
-    //   },
-    //   no: {
-    //     userIds: [String],
-    //     total: Number
-    //   }
-    // },
-    // fifth: {
-    //   yes: {
-    //     userIds: [String],
-    //     total: Number
-    //   },
-    //   no: {
-    //     userIds: [String],
-    //     total: Number
-    //   }
-    // }
+ 

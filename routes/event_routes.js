@@ -8,7 +8,11 @@ module.exports = function (router) {
 
   router.post('/events', function (req, res) {
     var newEvent = new Event(req.body);
+    var question = {};
+    question.title = req.body.question;
+    newEvent.questions.push(question);
     newEvent.eventTime = Date.parse(req.body.eventTime);
+    newEvent.eventTimeString = req.body.eventTime;
     newEvent.save(function (err, data) {
       if (err) {
         console.log(err);
@@ -30,4 +34,17 @@ module.exports = function (router) {
       res.json(data);
     });
   });
+
+  router.put('/events/:id', function(req, res) {
+    var update = req.body;
+
+    Event.update({'_id': req.params.id},{$addToSet:{questions: update}}, function(err, data) {
+      if(err){
+        console.log(err);
+        return res.status(500).json({msg: 'internal server error'});
+      }
+      res.json({msg: "Put: Nailed it"});
+    });
+  });
 };
+
