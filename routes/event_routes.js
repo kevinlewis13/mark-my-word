@@ -11,7 +11,7 @@ module.exports = function (router) {
     var question = {};
     question.title = req.body.question;
     newEvent.questions.push(question);
-    newEvent.eventTime = Date.parse(req.body.eventTime);
+    newEvent.eventTimeUnix = Date.parse(req.body.eventTime);
     newEvent.eventTimeString = req.body.eventTime;
     newEvent.save(function (err, data) {
       if (err) {
