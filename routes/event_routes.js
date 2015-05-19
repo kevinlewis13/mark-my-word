@@ -2,6 +2,7 @@
 
 var Event = require('../models/Event');
 var bodyParser = require('body-parser');
+var url = require('url');
 
 module.exports = function (router) {
   router.use(bodyParser.json());
@@ -36,6 +37,7 @@ module.exports = function (router) {
   });
 
   router.put('/events/:id', function(req, res) {
+
     var update = req.body;
 
     Event.update({'_id': req.params.id},{$addToSet:{questions: update}}, function(err, data) {
@@ -44,6 +46,19 @@ module.exports = function (router) {
         return res.status(500).json({msg: 'internal server error'});
       }
       res.json({msg: "Put: Nailed it"});
+    });
+  });
+
+  router.post('/events/:id', function(req, res) {
+    var parsedUrl = url.parse(req.url);
+    var update = req.body;
+
+    Event.update({'_id': req.params.id},{$addToSet:{questions: update}}, function(err, data) {
+      if(err){
+        console.log(err);
+        return res.status(500).json({msg: 'internal server error'});
+      }
+      res.json({msg: "Post Update: Nailed it"});
     });
   });
 };
