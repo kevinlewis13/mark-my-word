@@ -8,11 +8,13 @@ var app = express();
 
 var strategy = require('./lib/passport_strat');
 
+process.env.APP_SECRET = process.env.APP_SECRET || 'CHANGETHIS!';
+
 var userRoutes = require('./routes/user_routes');
 var eventRoutes = require('./routes/event_routes');
 
 var port = process.env.PORT || 3000;
-process.env.APP_SECRET = process.env.APP_SECRET || 'CHANGETHIS!';
+
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mmw_dev');
 
