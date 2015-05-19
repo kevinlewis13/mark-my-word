@@ -13,15 +13,26 @@ module.exports = function(router, passport) {
     		console.log(err);
     		return res.status(500).json({msg: 'error generating token'});
     	}
-    	res.json({token: data});
+    	res.status(200).json({token: data});
     });
   });
+
+  router.get('/dashboard', eatAuth, function(req, res) {
+    var user = {
+      username: req.user.username,
+      email: req.user.basic.email,
+      events: req.user.events
+    };
+    return res.status(200).json(user);
+  });
+
   // To create a new user send an object with username, password and email
   // properties.
-  router.post('/createuser', function(req, res) {
+  router.post('/create_user', function(req, res) {
     var newUser = new User();
     if (!validator.validate(req.body.email)) {
-      return res.json({msg: 'A valid email address is required'});
+      return res.json({errorCode: 2,
+        msg: 'A valid email address is required'});
     }
     newUser.username = req.body.username;
     newUser.basic.email = req.body.email;
@@ -34,7 +45,7 @@ module.exports = function(router, passport) {
       newUser.save(function(err, data) {
         if (err) {
           console.log(err);
-          res.status(500).json({msg: 'Account could not be created'});
+          return res.status(500).json({msg: err});
         }
         // Return a token
         newUser.generateToken(process.env.APP_SECRET, function(err, data) {
@@ -42,7 +53,7 @@ module.exports = function(router, passport) {
             console.log(err);
             return res.status(500).json({msg: 'Internal Service Error'});
           }
-          res.json({token: data});
+          res.status(200).json({token: data});
         });
       });
     });
