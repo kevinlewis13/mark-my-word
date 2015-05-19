@@ -3,6 +3,9 @@
 var Event = require('../models/Event');
 var bodyParser = require('body-parser');
 var url = require('url');
+var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
+
+
 
 module.exports = function (router) {
   router.use(bodyParser.json());
@@ -59,9 +62,9 @@ module.exports = function (router) {
     });
   });
 
-  router.post('/events/:id', function(req, res) {
-    var parsedUrl = url.parse(req.url);
-    var update = req.body;
+  router.post('/events/:id', eatAuth, function(req, res) {
+    var testUrl = '/events?user_Token=RRBIa+sFhwohzXYogd6iWFYsR2lGbyta5TyaZ13Rz5fWwCISdwrw6kaYDYoHdoFCv7GciV5zcWP5QcNzWCDlj4MEPkqKgps=&eventId=555b9d78d5d15203008e1e4c&q1=true&q2=false&q3=false'
+    var parsedUrl = url.parse(testUrl, true);
 
     Event.update({'_id': req.params.id},{$addToSet:{questions: update}}, function(err, data) {
       if(err){
@@ -70,6 +73,13 @@ module.exports = function (router) {
       }
       res.json({msg: "Post Update: Nailed it"});
     });
+    User.update({'uuid': req.user.uuid})
   });
 };
 
+ // query:
+ //   { user_Token: 'RRBIa sFhwohzXYogd6iWFYsR2lGbyta5TyaZ13Rz5fWwCISdwrw6kaYDYoHdoFCv7GciV5zcWP5QcNzWCDlj4MEPkqKgps=',
+ //     eventId: '555b9d78d5d15203008e1e4c',
+ //     q1: 'true',
+ //     q2: 'false',
+ //     q3: 'false' },
