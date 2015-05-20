@@ -1,6 +1,6 @@
 # mark-my-word
 --------------
-All API access is over `HTTPS:` and is available from `mark-my-word.herokuapp.com`
+All API access is over `https:` and is available from `mark-my-word.herokuapp.com`
 
 ## Authentication
 
@@ -10,10 +10,20 @@ Routes that require authentication require a valid token sent in the request hea
 
 ### Login
 
-`GET` `/login` authenticate via `email:password`
+`GET /login`
 
-response is a JSON object
+#### Request
 
-```{
-  token: tokenData
-}```
+```
+{
+  "email": String,
+  "password": String
+}
+```
+#### Response
+
+```
+{
+"token": "0beFEM3V1r9jM4RZ76o/qbG9Hs12codVsoKJ7Q8ibhi3871whxYc+/UBwCCYGq4b3mbL/ucZ02w0a0QsE6xRZIVVH+hqtgc="
+}
+```
