@@ -6,6 +6,8 @@ var passport = require('passport');
 
 var app = express();
 
+app.use(express.static('public'));
+
 var strategy = require('./lib/passport_strat');
 
 process.env.APP_SECRET = process.env.APP_SECRET || 'CHANGETHIS!';
