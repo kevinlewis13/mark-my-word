@@ -58,12 +58,4 @@ Reads a summary of the current users account
 
 #### Response
 
-events is an array containing the events that the user is subscribed to
-
-```
-{
-"username": "trogdor1",
-"email": "trogdor@example.com",
-"events": [ ]
-}
-```
+User Object
