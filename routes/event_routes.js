@@ -4,6 +4,7 @@ var Event = require('../models/Event');
 var User = require('../models/User');
 var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
+
 var url = require('url');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
 
@@ -32,25 +33,78 @@ module.exports = function (router) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
-    var eventId = parsedUrl.query.eventId;
     var newVote = new Vote();
 
-    questionIds.forEach(function(val, index) {
-       newVote.userId = req.user.uuid;
-       newVote.eventId = eventId
-       newVote.questionId = val;
-       newVote.prediction = predictions[index];
+    var EventEmitter = require('events').EventEmitter;
+    var ee = new EventEmitter();
 
+    var count = 0;
+    ee.on('save', function() {
+      if (count === questionIds.length) {
+        res.json({msg: 'done'});
+      }
+    });
+
+    questionIds.forEach(function(val, index) {
+      newVote.userId = req.user.uuid;
+      newVote.eventId = parsedUrl.query.eventId;
+      newVote.questionId = val;
+      newVote.prediction = predictions[index];
       newVote.save(function(err, vote) {
-        if(err){
+        if (err) {
           console.log(err);
           return res.status(500).json({msg: 'server error'});
         }
-        res.status(200).json(vote);
+        count += 1;
+        ee.emit('save');
       });
     });
-    var eventSummary = Vote.find({'eventId': eventId})
-    res.json(eventSummary);
+
+    // questionIds.forEach(function(val, index) {
+    //   newVote.userId = req.user.uuid;
+    //   newVote.eventId = parsedUrl.query.eventId;
+    //   newVote.questionId = val;
+    //   newVote.prediction = predictions[index];
+    //   var count = 0;
+      
+    //   newVote.save(function(err, vote) {
+    //     if(err){
+    //       console.log(err);
+    //       return res.status(500).json({msg: 'server error'});
+    //     }
+    //     counter ++;
+    //   });
+
+    //   if(counter === questionIds.length -1) {
+    //     res.json({msg: 'done'})
+    //   }
+
+    // });
+
+
+    // for(var i = 0; i < questionIds.length; i++) {
+
+    //   (function(lockedIndex) {
+    //     newVote.userId = req.user.uuid;
+    //   newVote.eventId = parsedUrl.query.eventId;
+    //   newVote.questionId = questionIds[i];
+    //   newVote.prediction = predictions[i];
+
+    //   newVote.save(function(err, vote) {
+    //     if(err){
+    //       console.log(err);
+    //       return res.status(500).json({msg: 'server error'});
+    //     }
+    //   });
+    // })(i);
+      
+    // }
+
+
+
+
+    res.json({msg: 'done'})
+
   });
 
 
@@ -75,7 +129,6 @@ module.exports = function (router) {
         console.log(err);
         return res.status(500).json({msg:'internal server error'});
       }
-      
       res.status(200).json(data);
     });
   });
@@ -99,3 +152,32 @@ module.exports = function (router) {
 };
 
 
+// questionIds.forEach(function(index, val) {
+//       newVote.userId = req.user.uuid;
+//       newVote.eventId = parsedUrl.query.eventId;
+//       newVote.questionId = val;
+//       newVote.prediction = predictions[index];
+
+//       newVote.save(function(err, vote) {
+//         if(err){
+//           console.log(err);
+//           return res.status(500).json({msg: 'server error'});
+//         }
+//         res.status(200).json(vote);
+//       });
+//     });
+
+    // for(var i = 0; i < questionIds.length; i++) {
+    //   newVote.userId = req.user.uuid;
+    //   newVote.eventId = parsedUrl.query.eventId;
+    //   newVote.questionId = questionIds[i];
+    //   newVote.prediction = predictions[i];
+
+    //   newVote.save(function(err, vote) {
+    //     if(err){
+    //       console.log(err);
+    //       return res.status(500).json({msg: 'server error'});
+    //     }
+    //     res.status(200).json(vote);
+    //   });
+    // }
