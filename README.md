@@ -50,11 +50,11 @@ Create a new user account. Account creation requires a unique username, a unique
 }
 ```
 
-### Dashboard
+### User
 
 Reads a summary of the current users account
 
-`GET /dashboard [AUTH_REQUIRED]`
+`GET /user [AUTH_REQUIRED]`
 
 #### Response
 
