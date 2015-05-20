@@ -24,18 +24,7 @@ var userSchema = new mongoose.Schema({
 		}
 	},
 	uuid: String,
-	city: String,
-	state: String,
-	wins: Number,
-	losses: Number,
-	bets: Number,
-	record: Number,
-	events: []
 });
-
-userSchema.methods.generateRecord = function() {
-	this.record = this.wins/this.bets;
-};
 
 userSchema.methods.generateUuid = function() {
 	this.uuid = uuid.v1();
