@@ -46,7 +46,7 @@ module.exports = function (router) {
         console.log(err);
         return res.status(500).json({msg:'internal server error'});
       }
-      console.log(data[0].questions.length);
+      console.log(data[0].questions[0]._id);
       res.status(200).json({title: data[0].questions[0].question});
     });
   });
@@ -69,35 +69,38 @@ module.exports = function (router) {
     console.log(req.user.uuid);
     console.log(parsedUrl.query);
     console.log(req.params.id);
+    var answersArray = [true, true, true];
+    var questionsIdArray = ['555ccffb08f783065057dece', '555cd01808f783065057decf', '555cd01e08f783065057ded0'];
 
-    var answersArray = [true, false];
+    answersArray.forEach(function(current, index) {
+      var yesString = 'questions.' + index + '.yes';
+      var noString = 'questions.' + index + '.no';
+      var answerYes = {};
+      var answerNo = {};
+      answerYes[yesString] = req.user.uuid;
+      answerNo[noString] = req.user.uuid;
 
-    for (var i = 0; i < answersArray.length; i++) {
-      var noString = 'questions.' + i + '.no';
-      var yesString = 'questions.' + i + '.yes';
+      if (current) {
+        //return Event.update({'_id': req.params.id}, { $push: {answerYes: req.user.uuid} }, function(err, data) {
+        return Event.update({'_id': req.params.id}, answerYes, function(err, data) {
 
-      if (answersArray[i] === true) {
-
-        Event.update({'_id': req.params.id}, {$push:{yesString: req.user.uuid}}, function(err, data) {
           if(err){
             console.log(err);
             return res.status(500).json({msg: 'internal server error'});
           }
-          // res.json({msg: "Post Update: Nailed it"});
-        });
-     } 
-
-      else {
-
-        Event.update({'_id': req.params.id}, {$push: {noString: req.user.uuid}}, function(err, data) {
-          if(err){
-            console.log(err);
-            return res.status(500).json({msg: 'internal server error'});
-          }
-          // res.json({msg: "Post Update: Nailed it"});
+            console.log(data);
+          return console.log('pushed to yes');
         });
       }
-    };
+
+      return Event.update({'_id': req.params.id},  answerNo, function(err, data) {
+        if(err) {
+          console.log(err);
+        }
+
+        return console.log('pushed to no');
+      });
+    });
 
     User.update({'uuid': req.user.uuid}, {$addToSet:{events: req.params.id}}, function(err, data) {
       if(err){
@@ -115,3 +118,31 @@ module.exports = function (router) {
  //     q1: 'true',
  //     q2: 'false',
  //     q3: 'false' },
+
+
+    // for (var i = 0; i < answersArray.length; i++) {
+    //   var noString = 'questions.' + i + '.no';
+    //   var yesString = 'questions.' + i + '.yes';
+
+    //   if (answersArray[i] === true) {
+
+    //     Event.update({'_id': req.params.id}, {$push:{yesString: req.user.uuid}}, function(err, data) {
+    //       if(err){
+    //         console.log(err);
+    //         return res.status(500).json({msg: 'internal server error'});
+    //       }
+    //       // res.json({msg: "Post Update: Nailed it"});
+    //     });
+    //  } 
+
+    //   else {
+
+    //     Event.update({'_id': req.params.id}, {$push: {noString: req.user.uuid}}, function(err, data) {
+    //       if(err){
+    //         console.log(err);
+    //         return res.status(500).json({msg: 'internal server error'});
+    //       }
+    //       // res.json({msg: "Post Update: Nailed it"});
+    //     });
+    //   }
+    // };
