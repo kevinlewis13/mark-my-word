@@ -7,21 +7,14 @@ var eventSchema = mongoose.Schema({
   eventName: String,
   eventTimeUnix: Number,
   eventTimeString:String,
-  location: String,
   questions:[
-        {
-        question: String,
-        yes: [String],
-        no: [String],
-        actual: Boolean 
+    {
+      question: String,
+      result: Boolean
     }
-  ],
-  count: Number
+  ]
 });
 
-eventSchema.methods.void = function(date) {
-  return date > this.eventTime;
-};
 
 module.exports = mongoose.model('Event', eventSchema);
 
