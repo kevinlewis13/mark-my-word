@@ -11,26 +11,43 @@ module.exports = function (router) {
 
 //POST ROUTES
 
-  router.post('/events', function (req, res) {
+  router.post('/create_events', function (req, res) {
     var newEvent = new Event(req.body);
     var question = {};
     question.question = req.body.question;
     newEvent.questions.push(question);
     newEvent.eventTimeUnix = Date.parse(req.body.eventTime);
     newEvent.eventTimeString = req.body.eventTime;
-    newEvent.save(function (err, data) {
+    newEvent.save(function (err, newevent) {
       if (err) {
         console.log(err);
         return res.status(500).json({msg: 'server error'});
       }
-      res.json(data);
+      res.json(newevent);
     });
   });
 
+  router.post('/events', eatAuth, function(req, res) {
+    var parsedUrl = url.parse(req.url, true);
+    var questionIds = parsedUrl.query.questionIds.split(';');
+    var answers = parsedUrl.query.answers.split(';');
 
-  router.post('/events/:id', function(req, res) {
+    questionIds.forEach(function(val, index) {
+       newVote.userId = req.user.uuid;
+       newVote.eventId = parsedUrl.query.eventId;
+       newVote.questionId = val;
+       newVote.answer = answers[index];
 
+      newVote.save(function(err, vote) {
+        if(err){
+          console.log(err);
+          return res.status(500).json({msg: 'server error'});
+        }
+        res.status(200).json(vote);
+      });
+    })
   });
+
 
 //GET ROUTES
 
@@ -57,6 +74,7 @@ module.exports = function (router) {
       res.status(200).json({title: data[0].questions[0].question});
     });
   });
+
 
 //PUT ROUTES
 
