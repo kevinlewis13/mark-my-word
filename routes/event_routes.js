@@ -2,6 +2,7 @@
 
 var Event = require('../models/Event');
 var User = require('../models/User');
+var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
 var url = require('url');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
@@ -30,13 +31,14 @@ module.exports = function (router) {
   router.post('/events', eatAuth, function(req, res) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
-    var answers = parsedUrl.query.answers.split(';');
+    var predictions = parsedUrl.query.predictions.split(';');
+    var newVote = new Vote();
 
     questionIds.forEach(function(val, index) {
        newVote.userId = req.user.uuid;
        newVote.eventId = parsedUrl.query.eventId;
        newVote.questionId = val;
-       newVote.answer = answers[index];
+       newVote.prediction = predictions[index];
 
       newVote.save(function(err, vote) {
         if(err){
