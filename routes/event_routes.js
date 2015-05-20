@@ -1,6 +1,7 @@
 'use strict';
 
 var Event = require('../models/Event');
+var User = require('../models/User');
 var bodyParser = require('body-parser');
 var url = require('url');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
@@ -45,7 +46,8 @@ module.exports = function (router) {
         console.log(err);
         return res.status(500).json({msg:'internal server error'});
       }
-      res.status(200).json(data);
+      console.log(data[0].questions.length);
+      res.status(200).json({title: data[0].questions[0].question});
     });
   });
 
@@ -63,17 +65,47 @@ module.exports = function (router) {
   });
 
   router.post('/events/:id', eatAuth, function(req, res) {
-    var testUrl = '/events?user_Token=RRBIa+sFhwohzXYogd6iWFYsR2lGbyta5TyaZ13Rz5fWwCISdwrw6kaYDYoHdoFCv7GciV5zcWP5QcNzWCDlj4MEPkqKgps=&eventId=555b9d78d5d15203008e1e4c&q1=true&q2=false&q3=false'
-    var parsedUrl = url.parse(testUrl, true);
+    var parsedUrl = url.parse(req.url, true);
+    console.log(req.user.uuid);
+    console.log(parsedUrl.query);
+    console.log(req.params.id);
 
-    Event.update({'_id': req.params.id},{$addToSet:{questions: update}}, function(err, data) {
+    var answersArray = [true, false];
+
+    for (var i = 0; i < answersArray.length; i++) {
+      var noString = 'questions.' + i + '.no';
+      var yesString = 'questions.' + i + '.yes';
+
+      if (answersArray[i] === true) {
+
+        Event.update({'_id': req.params.id}, {$push:{yesString: req.user.uuid}}, function(err, data) {
+          if(err){
+            console.log(err);
+            return res.status(500).json({msg: 'internal server error'});
+          }
+          // res.json({msg: "Post Update: Nailed it"});
+        });
+     } 
+
+      else {
+
+        Event.update({'_id': req.params.id}, {$push: {noString: req.user.uuid}}, function(err, data) {
+          if(err){
+            console.log(err);
+            return res.status(500).json({msg: 'internal server error'});
+          }
+          // res.json({msg: "Post Update: Nailed it"});
+        });
+      }
+    };
+
+    User.update({'uuid': req.user.uuid}, {$addToSet:{events: req.params.id}}, function(err, data) {
       if(err){
         console.log(err);
         return res.status(500).json({msg: 'internal server error'});
       }
-      res.json({msg: "Post Update: Nailed it"});
+      res.json(data);
     });
-    User.update({'uuid': req.user.uuid})
   });
 };
 
