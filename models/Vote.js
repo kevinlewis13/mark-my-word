@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-var voteSchema = new Schema({
+var voteSchema = new mongoose.Schema({
   userId: String,
   questionId: String,
   prediction: Boolean,
