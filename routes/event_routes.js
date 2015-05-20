@@ -32,11 +32,12 @@ module.exports = function (router) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
+    var eventId = parsedUrl.query.eventId;
     var newVote = new Vote();
 
     questionIds.forEach(function(val, index) {
        newVote.userId = req.user.uuid;
-       newVote.eventId = parsedUrl.query.eventId;
+       newVote.eventId = eventId
        newVote.questionId = val;
        newVote.prediction = predictions[index];
 
@@ -47,7 +48,9 @@ module.exports = function (router) {
         }
         res.status(200).json(vote);
       });
-    })
+    });
+    var eventSummary = Vote.find({'eventId': eventId})
+    res.json(eventSummary);
   });
 
 
@@ -72,8 +75,8 @@ module.exports = function (router) {
         console.log(err);
         return res.status(500).json({msg:'internal server error'});
       }
-      console.log(data[0].questions[0]._id);
-      res.status(200).json({title: data[0].questions[0].question});
+      
+      res.status(200).json(data);
     });
   });
 
