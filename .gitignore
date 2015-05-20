@@ -2,3 +2,4 @@
 **/*.log
 **/db/*
 .env
+test.js
