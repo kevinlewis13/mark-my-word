@@ -50,3 +50,20 @@ Create a new user account. Account creation requires a unique username, a unique
 }
 ```
 
+### Dashboard
+
+Reads a summary of the current users account
+
+`GET /dashboard [AUTH_REQUIRED]`
+
+#### Response
+
+events is an array containing the events that the user is subscribed to
+
+```
+{
+"username": "trogdor1",
+"email": "trogdor@example.com",
+"events": [ ]
+}
+```
