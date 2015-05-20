@@ -59,4 +59,11 @@ module.exports = function(router, passport) {
     });
   });
 
+  router.delete('/delete_user', eatAuth, function(req, res) {
+    User.findOneAndRemove({uuid: req.user.uuid}, function() {
+      console.log('Your account was successfully deleted');
+      res.status(200).json({msg: 'account deletion successful'});
+    });
+  });
+
 };
