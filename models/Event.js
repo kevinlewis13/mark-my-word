@@ -15,7 +15,8 @@ var eventSchema = mongoose.Schema({
         no: [String],
         actual: Boolean 
     }
-  ]
+  ],
+  count: Number
 });
 
 eventSchema.methods.void = function(date) {
