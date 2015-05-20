@@ -10,16 +10,17 @@ Routes that require authentication require a valid token sent in the request hea
 
 ### Login
 
+User authentication login requires email and password information and will return a token that will allow access to `[AUTH_REQUIRED]` routes. tokens will invalidate after 7 days or if the server is restarted.
+
 `GET /login`
 
-#### Request
+#### Parameters
 
-```
-{
-  "email": String,
-  "password": String
-}
-```
+| name     | type   | description                                         |
+|----------|--------|-----------------------------------------------------|
+| email    | string | a valid email address for a registered user account |
+| password | string | user password                                       |
+
 #### Response
 
 ```
