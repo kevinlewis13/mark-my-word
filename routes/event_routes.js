@@ -33,77 +33,32 @@ module.exports = function (router) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
-    var newVote = new Vote();
+    var voteArray = [];
 
-    var EventEmitter = require('events').EventEmitter;
-    var ee = new EventEmitter();
-
-    var count = 0;
-    ee.on('save', function() {
-      if (count === questionIds.length) {
-        res.json({msg: 'done'});
-      }
-    });
-
-    questionIds.forEach(function(val, index) {
+    for(var i = 0; i < questionIds.length; i++) {
+      var newVote = new Vote();
       newVote.userId = req.user.uuid;
       newVote.eventId = parsedUrl.query.eventId;
-      newVote.questionId = val;
-      newVote.prediction = predictions[index];
-      newVote.save(function(err, vote) {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({msg: 'server error'});
-        }
-        count += 1;
-        ee.emit('save');
-      });
+      newVote.questionId = questionIds[i];
+      newVote.prediction = predictions[i];
+      voteArray[i] = newVote;
+    };
+    
+    Vote.create(voteArray, function(err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({msg: 'server error'});
+      }
+      // res.json({msg: 'done'})
     });
 
-    // questionIds.forEach(function(val, index) {
-    //   newVote.userId = req.user.uuid;
-    //   newVote.eventId = parsedUrl.query.eventId;
-    //   newVote.questionId = val;
-    //   newVote.prediction = predictions[index];
-    //   var count = 0;
-      
-    //   newVote.save(function(err, vote) {
-    //     if(err){
-    //       console.log(err);
-    //       return res.status(500).json({msg: 'server error'});
-    //     }
-    //     counter ++;
-    //   });
-
-    //   if(counter === questionIds.length -1) {
-    //     res.json({msg: 'done'})
-    //   }
-
-    // });
-
-
-    // for(var i = 0; i < questionIds.length; i++) {
-
-    //   (function(lockedIndex) {
-    //     newVote.userId = req.user.uuid;
-    //   newVote.eventId = parsedUrl.query.eventId;
-    //   newVote.questionId = questionIds[i];
-    //   newVote.prediction = predictions[i];
-
-    //   newVote.save(function(err, vote) {
-    //     if(err){
-    //       console.log(err);
-    //       return res.status(500).json({msg: 'server error'});
-    //     }
-    //   });
-    // })(i);
-      
-    // }
-
-
-
-
-    res.json({msg: 'done'})
+  Vote.find({'eventId': parsedUrl.query.eventId}, function(err, data){
+      if(err) {
+        console.log(err);
+        return res.status(500).json({msg: 'server error'});
+      }
+      res.json(data);
+    });  
 
   });
 
@@ -150,34 +105,3 @@ module.exports = function (router) {
   });
 
 };
-
-
-// questionIds.forEach(function(index, val) {
-//       newVote.userId = req.user.uuid;
-//       newVote.eventId = parsedUrl.query.eventId;
-//       newVote.questionId = val;
-//       newVote.prediction = predictions[index];
-
-//       newVote.save(function(err, vote) {
-//         if(err){
-//           console.log(err);
-//           return res.status(500).json({msg: 'server error'});
-//         }
-//         res.status(200).json(vote);
-//       });
-//     });
-
-    // for(var i = 0; i < questionIds.length; i++) {
-    //   newVote.userId = req.user.uuid;
-    //   newVote.eventId = parsedUrl.query.eventId;
-    //   newVote.questionId = questionIds[i];
-    //   newVote.prediction = predictions[i];
-
-    //   newVote.save(function(err, vote) {
-    //     if(err){
-    //       console.log(err);
-    //       return res.status(500).json({msg: 'server error'});
-    //     }
-    //     res.status(200).json(vote);
-    //   });
-    // }
