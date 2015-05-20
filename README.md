@@ -67,3 +67,17 @@ events is an array containing the events that the user is subscribed to
 "events": [ ]
 }
 ```
+
+## Event Routes
+
+### Creating Votes
+
+Adds vote documents to the Votes collection in the database.
+
+`POST /events`
+
+URL request formatted as
+
+`/events?eventId=eventId&questionIds=questionId;questionId;questionId&predicitions=prediction;prediction;prediction`
+
+the token will be written in the REQUEST head.
