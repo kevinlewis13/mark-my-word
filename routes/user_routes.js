@@ -17,7 +17,7 @@ module.exports = function(router, passport) {
     });
   });
 
-  router.get('/dashboard', eatAuth, function(req, res) {
+  router.get('/user', eatAuth, function(req, res) {
     var user = {
       username: req.user.username,
       email: req.user.basic.email,
