@@ -28,3 +28,25 @@ User authentication login requires email and password information and will retur
 "token": "0beFEM3V1r9jM4RZ76o/qbG9Hs12codVsoKJ7Q8ibhi3871whxYc+/UBwCCYGq4b3mbL/ucZ02w0a0QsE6xRZIVVH+hqtgc="
 }
 ```
+### Create User
+
+Create a new user account. Account creation requires a unique username, a unique, valid email address and the users password.
+
+`POST /create_user`
+
+#### Parameters
+
+| name     | type   | description                      |
+|----------|--------|----------------------------------|
+| username | string | A unique username                |
+| email    | string | A unique and valid email address |
+| password | string | user password                    |
+
+#### Response
+
+```
+{
+"token": "0beFEM3V1r9jM4RZ76o/qbG9Hs12codVsoKJ7Q8ibhi3871whxYc+/UBwCCYGq4b3mbL/ucZ02w0a0QsE6xRZIVVH+hqtgc="
+}
+```
+
