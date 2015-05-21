@@ -81,3 +81,48 @@ URL request formatted as
 `/events?eventId=eventId&questionIds=questionId;questionId;questionId&predicitions=prediction;prediction;prediction`
 
 the token will be written in the REQUEST head.
+
+### Finiding All Events
+
+`GET /events`
+
+Returns an array of JSON objects representing all events in the database that have a start time between now and 24 hours out.
+
+### Finding a Specific Event
+
+`GET /events/:eventId`
+
+Returns an array with one event object included.
+
+### Creating Events
+
+Adds new event to the database.
+
+`POST /create_events`
+
+requires object as follows:
+
+```
+{
+  "home": "Home Team Name",
+  "away": "Away Team Name",
+  "eventTime": "event's start time in format of 01 Jan 1970 00:00:00 UTC"
+}
+```
+
+Returns the new event object.
+
+### Adding Questions to Events
+
+Adds any amount of questions to a specific event.
+
+`PUT /events/:eventId`
+
+```
+{
+  "question": "Will the home team win?"
+}
+```
+
+Each question to be added requires its own PUT request.
+
