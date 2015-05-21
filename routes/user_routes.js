@@ -35,7 +35,7 @@ module.exports = function(router, passport) {
 
       data.forEach(function(obj) {
         if (result.events[obj.eventId]) {
-          result.events[obj.eventId].questionId = {
+          result.events[obj.eventId][obj.questionId] = {
             prediction: obj.prediction,
             result: obj.result || null
           };
