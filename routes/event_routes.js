@@ -42,7 +42,7 @@ module.exports = function (router) {
       newVote.questionId = questionIds[i];
       newVote.prediction = predictions[i];
       voteArray[i] = newVote;
-    };
+    }
     
     Vote.create(voteArray, function(err) {
       if (err) {
@@ -64,7 +64,7 @@ module.exports = function (router) {
             yes: yes,
             no : no,
             total: 1
-          }
+          };
         } else {
           result[obj.questionId].yes += yes;
           result[obj.questionId].no += no;

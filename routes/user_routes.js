@@ -35,7 +35,7 @@ module.exports = function(router, passport) {
           result[obj.questionId] = {
             yes: yes,
             no : no,
-          }
+          };
         } else {
           result[obj.questionId].yes += yes;
           result[obj.questionId].no += no;
