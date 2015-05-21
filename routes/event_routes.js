@@ -105,7 +105,18 @@ module.exports = function (router) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
-      res.json(data);
+
+      var forReturn=[]
+
+      data.forEach(function(val) {
+        val.findUsers();
+        if (val.users.indexOf(req.user.uuid) === -1){
+          forReturn.push(val)
+        }
+      });
+
+      res.json(forReturn);
+      
     });
   });
 

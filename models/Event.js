@@ -13,8 +13,18 @@ var eventSchema = new mongoose.Schema({
       question: String,
       result: Boolean
     }
-  ]
+  ],
+  users: []
+
 });
+
+eventSchema.method.findUsers = function() {
+  Vote.find({eventId : this.eventId}, function(err, votes) {  
+    votes.forEach(function(vote) {
+        this.users.push(vote.userId)
+    });
+  });
+}
 
 module.exports = mongoose.model('Event', eventSchema);
 
