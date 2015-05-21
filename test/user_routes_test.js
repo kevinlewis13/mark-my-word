@@ -1,4 +1,4 @@
-process.env.MONGOLAB_URI = 'mongodb://localhost/mmw_dev';
+process.env.MONGOLAB_URI = 'mongodb://localhost/mmw_test';
 require('../server.js');
 
 var mongoose = require('mongoose');
@@ -24,6 +24,7 @@ describe('Mark My Word App User Routes', function() {
       .post('/create_user')
       .send(testUser)
       .end(function(err, res) {
+        console.log(err);
         expect(err).to.eql(null);
         expect(typeof res.body.token).to.eql('string');
         done();
@@ -35,15 +36,23 @@ describe('Mark My Word App User Routes', function() {
       .get('/login')
       .auth(testUser.email, testUser.password)
       .end(function(err, res) {
+        console.log(err);
         expect(err).to.eql(null);
         expect(typeof res.body.token).to.eql('string');
         done();
       });
   });
 
+  // after(function(done) {
+  //   User.findOneAndRemove({'basic.email': testUser.email}, function() {
+  //     done();
+  //   });
+  // });
+
   after(function(done) {
-    User.findOneAndRemove({'basic.email': testUser.email}, function() {
+    mongoose.connection.db.dropDatabase(function() {
       done();
     });
   });
+
 });

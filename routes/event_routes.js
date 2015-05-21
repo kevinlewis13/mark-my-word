@@ -4,6 +4,8 @@ var Event = require('../models/Event');
 var User = require('../models/User');
 var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
+var EventEmitter = require('events').EventEmitter;
+var ee = new EventEmitter();
 
 var url = require('url');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
@@ -82,12 +84,43 @@ module.exports = function (router) {
   router.get('/events', eatAuth, function (req, res) {
     var now = Date.now();
     var dayOut = Date.now() + 86400000;
+    var dataArray = [];
+    var forReturn=[];
+    var count = 0;
 
     Event.find({eventTimeUnix: {$gt: now, $lt: dayOut}}, function (err, data) {
       if (err) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
+<<<<<<< HEAD
+      dataArray = data;
+      ee.emit('findDone', data);
+    });
+
+    ee.on('findDone', function(data){
+      dataArray.forEach(function(val) {
+        val.findUsers(function(err) {
+          if(err){
+            console.log(err);
+          }
+        });
+        count++;
+        console.log(count);
+      });
+
+      if(count === dataArray.length) {
+          ee.emit('usersDone');
+        }
+    });
+
+    ee.on('usersDone', function(data){
+      dataArray.forEach(function(val){
+         if (val.users.indexOf(req.user.uuid) === -1){
+          forReturn.push(val);
+        }
+      });
+=======
 
       var forReturn=[];
       var usersArray = [];
@@ -99,8 +132,10 @@ module.exports = function (router) {
         }
       });
 
+>>>>>>> master
       res.json(forReturn);
     });
+
   });
 
   router.get('/events/:id', function (req, res) {

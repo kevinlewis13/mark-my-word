@@ -2,6 +2,8 @@
 
 var mongoose = require('mongoose');
 var Vote = require('./Vote');
+var EventEmitter = require('events').EventEmitter;
+var ee = new EventEmitter();
 
 var eventSchema = new mongoose.Schema({
   eventId: String,
@@ -19,17 +21,19 @@ var eventSchema = new mongoose.Schema({
   users: []
 });
 
-eventSchema.method.findUsers = function(array) {
+eventSchema.methods.findUsers = function(callback) {
   var that = this;
-  Vote.find({eventId : this.id}, function(err, votes) {
+  Vote.find({eventId: this._id}, function(err, votes) {
     votes.forEach(function(vote) {
-      if (array.indexOf(vote.userId) === -1) {
-        array.push(vote.userId);
-      };
+      if(that.users.indexOf(vote.userId) === -1) {
+        that.users.push(vote.userId);
+        that.save(function(err){
+          if (err) {console.log(err);}
+        });
+      }
+    callback(err);
     });
   });
 };
 
 module.exports = mongoose.model('Event', eventSchema);
-
-
