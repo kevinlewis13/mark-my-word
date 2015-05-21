@@ -30,7 +30,7 @@ module.exports = function (router) {
   });
 
   //creates votes documents
-  router.post('/events', eatAuth, function(req, res) {
+  router.post('/events', eatAuth, function (req, res) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
@@ -79,7 +79,7 @@ module.exports = function (router) {
 
 //GET ROUTES
 
-  router.get('/events', function (req, res) {
+  router.get('/events', eatAuth, function (req, res) {
     var now = Date.now();
     var dayOut = Date.now() + 86400000;
 
@@ -98,7 +98,7 @@ module.exports = function (router) {
         }
       });
 
-      res.json(forReturn);
+      res.json(data);
     });
   });
 
