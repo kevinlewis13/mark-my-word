@@ -20,7 +20,7 @@ var eventSchema = new mongoose.Schema({
   users: []
 });
 
-eventSchema.methods.findUsers = function() {
+eventSchema.methods.findUsers = function(callback) {
   var that = this;
   Vote.find({eventId: this._id}, function(err, votes) {  
     votes.forEach(function(vote) {
@@ -30,7 +30,7 @@ eventSchema.methods.findUsers = function() {
           if (err) {console.log(err);}
         });
       }
-      ee.emit('usersDone');
+    callback(err);  
     });
   });
 };
