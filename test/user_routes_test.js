@@ -35,7 +35,7 @@ describe('Mark My Word App User Routes', function() {
       .get('/login')
       .auth(testUser.email, testUser.password)
       .end(function(err, res) {
-        expect(err).to.eql(null)
+        expect(err).to.eql(null);
         expect(typeof res.body.token).to.eql('string');
         done();
       });

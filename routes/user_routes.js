@@ -5,6 +5,7 @@ var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
 var validator = require('email-validator');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
+var getUser = require('./getUser');
 
 module.exports = function(router, passport) {
   router.use(bodyParser.json());
@@ -21,39 +22,7 @@ module.exports = function(router, passport) {
   });
 
   // will return a summary view of the user
-  router.get('/user', eatAuth, function(req, res) {
-    // user is stored in req.user
-    var result = {};
-    result.username = req.user.username;
-    Vote.find({'userId': req.user.uuid}, function(err, data) {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({msg: 'database error'});
-      }
-
-      result.events = {};
-
-      data.forEach(function(obj) {
-        if (result.events[obj.eventId]) {
-          result.events[obj.eventId].questionId = {
-            prediction: obj.prediction,
-            result: obj.result;
-          };
-        } else {
-          var questionId = obj.questionId;
-          result.events[obj.eventId] = {
-            questionId: {
-              prediction: obj.prediction,
-              result: obj.result
-            }
-          };
-        }
-
-      });
-
-      return res.status(200).json(result);
-    });
-  });
+  router.get('/user', eatAuth, getUser);
 
   // Create a new user
   router.post('/create_user', function(req, res) {
