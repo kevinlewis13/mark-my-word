@@ -33,9 +33,16 @@ var yesterdayEvent = {
   eventTime: dateYesterday.toString()
 };
 
+var testUser = {
+  username: 'RouteTest',
+  email: 'testing@example.com',
+  password: 'waffles'
+};
+
 describe('Mark My Word App Event Routes', function() {
 
   var testEventId;
+  var testToken;
 
   before(function(done) {
     chai.request(domain)
@@ -43,9 +50,11 @@ describe('Mark My Word App Event Routes', function() {
       .send(tomorrowEvent)
       .end(function(err, res) {
         if (err) {
-          return console.log(err);
+          console.log(err);
+          return done();
         }
-        return testEventId = res.body._id;
+        testEventId = res.body._id;
+        return;
       });
       
     chai.request(domain)
@@ -56,8 +65,20 @@ describe('Mark My Word App Event Routes', function() {
           console.log(err);
           return done();
         }
+    });
+
+    chai.request(domain)
+      .post('/create_user')
+      .send(testUser)
+      .end(function(err, res) {
+         if (err) {
+          console.log(err);
+          return done();
+        }
+        testToken = res.body.token;
         done();
     });
+
   });
 
   it('Should create an event', function(done){
@@ -78,8 +99,10 @@ describe('Mark My Word App Event Routes', function() {
   it('Should return a list of events happening in the next 24 hours', function(done) {
     chai.request(domain)
       .get('/events')
+      .auth({token: testToken})
       .end(function(err, res) {
         expect(typeof res.body).to.eql('object');
+        expect(res.body.length).to.eql(1);
         expect(res.body[0].home).to.eql('TOMORROW');
         expect(res.body[0].home).to.not.eql('YESTERDAY');
         done();
