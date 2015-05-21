@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Vote = require('./Vote');
 
 var eventSchema = new mongoose.Schema({
   eventId: String,
@@ -18,10 +19,12 @@ var eventSchema = new mongoose.Schema({
 
 });
 
-eventSchema.method.findUsers = function() {
+eventSchema.methods.findUsers = function() {
   Vote.find({eventId : this.eventId}, function(err, votes) {  
     votes.forEach(function(vote) {
+      if(this.users.indexOf(vote.userId) === -1) {
         this.users.push(vote.userId)
+      }
     });
   });
 }
