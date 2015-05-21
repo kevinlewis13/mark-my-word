@@ -19,11 +19,12 @@ var eventSchema = new mongoose.Schema({
   users: []
 });
 
-eventSchema.method.findUsers = function() {
- Vote.find({eventId : this.eventId}, function(err, votes) {
+eventSchema.method.findUsers = function(array) {
+  var that = this;
+  Vote.find({eventId : this.id}, function(err, votes) {
     votes.forEach(function(vote) {
-      if (this.users.indexof(vote.userId) === -1) {
-        this.users.push(vote.userId);
+      if (array.indexOf(vote.userId) === -1) {
+        array.push(vote.userId);
       };
     });
   });

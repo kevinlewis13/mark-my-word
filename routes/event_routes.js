@@ -90,15 +90,16 @@ module.exports = function (router) {
       }
 
       var forReturn=[];
+      var usersArray = [];
 
       data.forEach(function(val) {
-        val.findUsers();
-        if (val.users.indexOf(req.user.uuid) === -1){
+        val.findUsers(usersArray);
+        if (usersArray.indexOf(req.user.uuid) === -1){
           forReturn.push(val);
         }
       });
 
-      res.json(data);
+      res.json(forReturn);
     });
   });
 
