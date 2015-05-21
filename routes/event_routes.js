@@ -4,6 +4,8 @@ var Event = require('../models/Event');
 var User = require('../models/User');
 var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
+var EventEmitter = require('events').EventEmitter;
+var ee = new EventEmitter();
 
 var url = require('url');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
@@ -74,50 +76,43 @@ module.exports = function (router) {
 
       res.json(result);
     });
-
-    // Event.find({'_id': parsedUrl.query.eventId}, function(err, data){
-
-    //   var objArr = [];
-      
-    //   data[0].questions.forEach(function(val){
-    //     var newObj = {};
-    //     newObj.id = val._id;
-    //     objArr.push(newObj);
-    //   });
-
-    //   Vote.find('eventId': parsedUrl.query.eventId)
-
-
-    //   res.json(objArr);
-    // }); 
-
   });
 
 
 //GET ROUTES
 
-  router.get('/events', function (req, res) {
+  router.get('/events', eatAuth, function (req, res) {
     var now = Date.now();
     var dayOut = Date.now() + 86400000;
+    var dataArray = [];
+    var forReturn=[];
 
     Event.find({eventTimeUnix: {$gt: now, $lt: dayOut}}, function (err, data) {
       if (err) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
-
-      var forReturn=[];
-
-      data.forEach(function(val) {
+      dataArray = data;
+      ee.emit('findDone', data);
+    });
+  
+    ee.on('findDone', function(data){
+      dataArray.forEach(function(val, done) {
         val.findUsers();
-        if (val.users.indexOf(req.user.uuid) === -1){
-          forReturn.push(val)
+        done;
+      });
+      ee.emit('usersDone');
+    });
+
+    ee.on('usersDone', function(data){
+      dataArray.forEach(function(val){
+         if (val.users.indexOf(req.user.uuid) === -1){
+          forReturn.push(val);
         }
       });
-
       res.json(forReturn);
-
     });
+  
   });
 
   router.get('/events/:id', function (req, res) {
