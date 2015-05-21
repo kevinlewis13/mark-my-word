@@ -44,7 +44,7 @@ module.exports = function(router, passport) {
           result.events[vote.eventId][vote.questionId] = {
             prediction: vote.prediction,
             result: vote.result || null
-          }
+          };
         }
 
       });

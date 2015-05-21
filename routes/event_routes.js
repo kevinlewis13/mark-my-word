@@ -43,7 +43,7 @@ module.exports = function (router) {
       newVote.questionId = questionIds[i];
       newVote.prediction = predictions[i];
       voteArray[i] = newVote;
-    };
+    }
 
     Vote.create(voteArray, function(err) {
       if (err) {
@@ -65,7 +65,7 @@ module.exports = function (router) {
             yes: yes,
             no : no,
             total: 1
-          }
+          };
         } else {
           result[obj.questionId].yes += yes;
           result[obj.questionId].no += no;
@@ -75,25 +75,7 @@ module.exports = function (router) {
 
       res.json(result);
     });
-
-    // Event.find({'_id': parsedUrl.query.eventId}, function(err, data){
-
-    //   var objArr = [];
-
-    //   data[0].questions.forEach(function(val){
-    //     var newObj = {};
-    //     newObj.id = val._id;
-    //     objArr.push(newObj);
-    //   });
-
-    //   Vote.find('eventId': parsedUrl.query.eventId)
-
-
-    //   res.json(objArr);
-    // });
-
   });
-
 
 //GET ROUTES
 
@@ -106,7 +88,17 @@ module.exports = function (router) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
-      res.json(data);
+
+      var forReturn=[];
+
+      data.forEach(function(val) {
+        val.findUsers();
+        if (val.users.indexOf(req.user.uuid) === -1){
+          forReturn.push(val);
+        }
+      });
+
+      res.json(forReturn);
     });
   });
 
