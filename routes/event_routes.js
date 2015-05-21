@@ -86,6 +86,7 @@ module.exports = function (router) {
     var dayOut = Date.now() + 86400000;
     var dataArray = [];
     var forReturn=[];
+    var count = 0;
 
     Event.find({eventTimeUnix: {$gt: now, $lt: dayOut}}, function (err, data) {
       if (err) {
@@ -97,11 +98,19 @@ module.exports = function (router) {
     });
   
     ee.on('findDone', function(data){
-      dataArray.forEach(function(val, done) {
-        val.findUsers();
-        done;
+      dataArray.forEach(function(val) {
+        val.findUsers(function(err) {
+          if(err){
+            console.log(err);
+          }
+        });
+        count++;
+        console.log(count);
       });
-      ee.emit('usersDone');
+
+      if(count === dataArray.length) {
+          ee.emit('usersDone');
+        }
     });
 
     ee.on('usersDone', function(data){
