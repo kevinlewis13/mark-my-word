@@ -37,16 +37,14 @@ module.exports = function(router, passport) {
         if (result.events[obj.eventId]) {
           result.events[obj.eventId].questionId = {
             prediction: obj.prediction,
-            result: obj.result
+            result: obj.result || null
           };
         } else {
-          var questionId = obj.questionId;
-          result.events[obj.eventId] = {
-            questionId: {
-              prediction: obj.prediction,
-              result: obj.result
-            }
-          };
+          result.events[obj.eventId] = {};
+          result.events[obj.eventId].questionId = {
+            prediction: obj.prediction,
+            result: obj.result || null
+          }
         }
 
       });
