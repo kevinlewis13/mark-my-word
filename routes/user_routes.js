@@ -25,7 +25,7 @@ module.exports = function(router, passport) {
     // user is stored in req.user
     var result = {};
     result.username = req.user.username;
-    Vote.find({'userId': req.user.uuid}, function(err, data) {
+    Vote.find({'userId': req.user.uuid}, function(err, votes) {
       if (err) {
         console.log(err);
         return res.status(500).json({msg: 'database error'});
@@ -33,17 +33,17 @@ module.exports = function(router, passport) {
 
       result.events = {};
 
-      data.forEach(function(obj) {
-        if (result.events[obj.eventId]) {
-          result.events[obj.eventId][obj.questionId] = {
-            prediction: obj.prediction,
-            result: obj.result || null
+      votes.forEach(function(vote) {
+        if (result.events[vote.eventId]) {
+          result.events[vote.eventId][vote.questionId] = {
+            prediction: vote.prediction,
+            result: vote.result || null
           };
         } else {
-          result.events[obj.eventId] = {};
-          result.events[obj.eventId].questionId = {
-            prediction: obj.prediction,
-            result: obj.result || null
+          result.events[vote.eventId] = {};
+          result.events[vote.eventId][vote.questionId] = {
+            prediction: vote.prediction,
+            result: vote.result || null
           }
         }
 
