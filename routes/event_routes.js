@@ -106,7 +106,7 @@ module.exports = function (router) {
         res.status(500).json({msg: 'server error'});
       }
 
-      var forReturn=[]
+      var forReturn=[];
 
       data.forEach(function(val) {
         val.findUsers();
@@ -116,7 +116,7 @@ module.exports = function (router) {
       });
 
       res.json(forReturn);
-      
+
     });
   });
 
