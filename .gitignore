@@ -1,2 +1,5 @@
-node_modules
-db
+**/node_modules/*
+**/*.log
+**/db/*
+.env
+test.js
