@@ -23,23 +23,32 @@ module.exports = function(router, passport) {
   // will return a summary view of the user
   router.get('/user', eatAuth, function(req, res) {
     // user is stored in req.user
-    console.log(req.user.uuid);
+    var result = {};
+    result.username = req.user.username;
     Vote.find({'userId': req.user.uuid}, function(err, data) {
-      var result = {};
+      if (err) {
+        console.log(err);
+        return res.status(500).json({msg: 'database error'});
+      }
+
+      result.events = {};
 
       data.forEach(function(obj) {
-        var yes = 0;
-        var no = 0;
-        obj.prediction ? yes += 1 : no += 1;
-        if (!result[obj.questionId]) {
-          result[obj.questionId] = {
-            yes: yes,
-            no : no,
-          }
+        if (result.events[obj.eventId]) {
+          result.events[obj.eventId].questionId = {
+            prediction: obj.prediction,
+            result: obj.result;
+          };
         } else {
-          result[obj.questionId].yes += yes;
-          result[obj.questionId].no += no;
-        }  
+          var questionId = obj.questionId;
+          result.events[obj.eventId] = {
+            questionId: {
+              prediction: obj.prediction,
+              result: obj.result
+            }
+          };
+        }
+
       });
 
       return res.status(200).json(result);
