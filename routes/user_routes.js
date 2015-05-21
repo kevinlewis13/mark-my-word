@@ -1,5 +1,7 @@
 // Require in userSchema
 var User = require('../models/User');
+var Event = require('../models/Event');
+var Vote = require('../models/Vote');
 var bodyParser = require('body-parser');
 var validator = require('email-validator');
 var eatAuth = require('../lib/eat_auth')(process.env.APP_SECRET);
@@ -21,7 +23,27 @@ module.exports = function(router, passport) {
   // will return a summary view of the user
   router.get('/user', eatAuth, function(req, res) {
     // user is stored in req.user
-    return res.status(200).json(req.user);
+    console.log(req.user.uuid);
+    Vote.find({'userId': req.user.uuid}, function(err, data) {
+      var result = {};
+
+      data.forEach(function(obj) {
+        var yes = 0;
+        var no = 0;
+        obj.prediction ? yes += 1 : no += 1;
+        if (!result[obj.questionId]) {
+          result[obj.questionId] = {
+            yes: yes,
+            no : no,
+          }
+        } else {
+          result[obj.questionId].yes += yes;
+          result[obj.questionId].no += no;
+        }  
+      });
+
+      return res.status(200).json(result);
+    });
   });
 
   // Create a new user
