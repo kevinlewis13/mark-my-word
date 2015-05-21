@@ -29,6 +29,7 @@ module.exports = function (router) {
     });
   });
 
+  //creates votes documents
   router.post('/events', eatAuth, function(req, res) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
@@ -43,7 +44,7 @@ module.exports = function (router) {
       newVote.prediction = predictions[i];
       voteArray[i] = newVote;
     };
-    
+
     Vote.create(voteArray, function(err) {
       if (err) {
         console.log(err);
@@ -69,7 +70,7 @@ module.exports = function (router) {
           result[obj.questionId].yes += yes;
           result[obj.questionId].no += no;
           result[obj.questionId].total += 1;
-        }  
+        }
       });
 
       res.json(result);
@@ -78,7 +79,7 @@ module.exports = function (router) {
     // Event.find({'_id': parsedUrl.query.eventId}, function(err, data){
 
     //   var objArr = [];
-      
+
     //   data[0].questions.forEach(function(val){
     //     var newObj = {};
     //     newObj.id = val._id;
@@ -89,7 +90,7 @@ module.exports = function (router) {
 
 
     //   res.json(objArr);
-    // }); 
+    // });
 
   });
 

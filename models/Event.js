@@ -8,6 +8,7 @@ var eventSchema = new mongoose.Schema({
   away: String,
   eventTimeUnix: Number,
   eventTimeString:String,
+  completed: Boolean,
   questions:[
     {
       question: String,
@@ -18,4 +19,4 @@ var eventSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Event', eventSchema);
 
- 
+
