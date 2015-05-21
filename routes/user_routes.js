@@ -37,7 +37,7 @@ module.exports = function(router, passport) {
         if (result.events[obj.eventId]) {
           result.events[obj.eventId].questionId = {
             prediction: obj.prediction,
-            result: obj.result;
+            result: obj.result
           };
         } else {
           var questionId = obj.questionId;
