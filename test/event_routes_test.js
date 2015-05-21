@@ -19,21 +19,23 @@ var testEvent = {
   home:"Mariners",
   away:"Red Sawx",
   eventTime:"May 21 2015 16:00:00 UTC"
-}
+};
 
 var tomorrowEvent = {
   home:"TOMORROW",
   away:"Orioles",
   eventTime: dateTomorrow.toString()
-}
+};
 
 var yesterdayEvent = {
   home:"YESTERDAY",
   away:"Yankeees",
   eventTime: dateYesterday.toString()
-}
+};
 
 describe('Mark My Word App Event Routes', function() {
+
+  var testEventId;
 
   before(function(done) {
     chai.request(domain)
@@ -43,7 +45,7 @@ describe('Mark My Word App Event Routes', function() {
         if (err) {
           return console.log(err);
         }
-        return
+        return testEventId = res.body._id;
       });
       
     chai.request(domain)
@@ -56,7 +58,7 @@ describe('Mark My Word App Event Routes', function() {
         }
         done();
     });
-  })
+  });
 
   it('Should create an event', function(done){
     chai.request(domain)
@@ -84,7 +86,9 @@ describe('Mark My Word App Event Routes', function() {
       });
   });
 
-  it('Should')
+  // it('Should get info from a specific event', function(done) {
+  //   done();
+  // });
 
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
