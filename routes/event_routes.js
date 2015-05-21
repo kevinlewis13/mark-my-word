@@ -31,7 +31,8 @@ module.exports = function (router) {
     });
   });
 
-  router.post('/events', eatAuth, function(req, res) {
+  //creates votes documents
+  router.post('/events', eatAuth, function (req, res) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
@@ -45,7 +46,7 @@ module.exports = function (router) {
       newVote.prediction = predictions[i];
       voteArray[i] = newVote;
     }
-    
+
     Vote.create(voteArray, function(err) {
       if (err) {
         console.log(err);
@@ -71,13 +72,12 @@ module.exports = function (router) {
           result[obj.questionId].yes += yes;
           result[obj.questionId].no += no;
           result[obj.questionId].total += 1;
-        }  
+        }
       });
 
       res.json(result);
     });
   });
-
 
 //GET ROUTES
 
@@ -93,10 +93,11 @@ module.exports = function (router) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
+<<<<<<< HEAD
       dataArray = data;
       ee.emit('findDone', data);
     });
-  
+
     ee.on('findDone', function(data){
       dataArray.forEach(function(val) {
         val.findUsers(function(err) {
@@ -119,9 +120,22 @@ module.exports = function (router) {
           forReturn.push(val);
         }
       });
+=======
+
+      var forReturn=[];
+      var usersArray = [];
+
+      data.forEach(function(val) {
+        val.findUsers(usersArray);
+        if (usersArray.indexOf(req.user.uuid) === -1){
+          forReturn.push(val);
+        }
+      });
+
+>>>>>>> master
       res.json(forReturn);
     });
-  
+
   });
 
   router.get('/events/:id', function (req, res) {

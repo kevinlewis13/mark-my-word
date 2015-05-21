@@ -11,6 +11,7 @@ var eventSchema = new mongoose.Schema({
   away: String,
   eventTimeUnix: Number,
   eventTimeString:String,
+  completed: Boolean,
   questions:[
     {
       question: String,
@@ -22,7 +23,7 @@ var eventSchema = new mongoose.Schema({
 
 eventSchema.methods.findUsers = function(callback) {
   var that = this;
-  Vote.find({eventId: this._id}, function(err, votes) {  
+  Vote.find({eventId: this._id}, function(err, votes) {
     votes.forEach(function(vote) {
       if(that.users.indexOf(vote.userId) === -1) {
         that.users.push(vote.userId);
@@ -30,21 +31,9 @@ eventSchema.methods.findUsers = function(callback) {
           if (err) {console.log(err);}
         });
       }
-    callback(err);  
+    callback(err);
     });
   });
 };
 
 module.exports = mongoose.model('Event', eventSchema);
-
-// eventSchema.methods.findUsers = function(array) {
-//   Vote.find({eventId: this._id}, function(err, votes) {  
-//     votes.forEach(function(vote) {
-//       if(array.indexOf(vote.userId) === -1) {
-//         array.push(vote.userId);
-//         this.users.push(vote.userId);
-//         this.save;
-//       }
-//     }).bind(this);
-//   });
-// };
