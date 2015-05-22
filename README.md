@@ -52,7 +52,7 @@ Create a new user account. Account creation requires a unique username, a unique
 
 ### User
 
-Reads a summary of the current users account
+Reads a summary of the current users account, returns user information, all events that the user has made predictions for, the event data and
 
 `GET /user [AUTH_REQUIRED]`
 
