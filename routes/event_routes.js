@@ -97,7 +97,7 @@ module.exports = function (router) {
       ee.emit('findDone', data);
     });
 
-    ee.on('findDone', function(data){
+    ee.once('findDone', function(data){
       dataArray.forEach(function(val) {
         val.findUsers(function(err) {
           if(err){
