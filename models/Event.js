@@ -36,15 +36,3 @@ eventSchema.methods.findUsers = function(callback) {
 };
 
 module.exports = mongoose.model('Event', eventSchema);
-
-// eventSchema.methods.findUsers = function(array) {
-//   Vote.find({eventId: this._id}, function(err, votes) {  
-//     votes.forEach(function(vote) {
-//       if(array.indexOf(vote.userId) === -1) {
-//         array.push(vote.userId);
-//         this.users.push(vote.userId);
-//         this.save;
-//       }
-//     }).bind(this);
-//   });
-// };
