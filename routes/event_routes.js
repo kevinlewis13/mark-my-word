@@ -31,7 +31,8 @@ module.exports = function (router) {
     });
   });
 
-  router.post('/events', eatAuth, function(req, res) {
+  //creates votes documents
+  router.post('/events', eatAuth, function (req, res) {
     var parsedUrl = url.parse(req.url, true);
     var questionIds = parsedUrl.query.questionIds.split(';');
     var predictions = parsedUrl.query.predictions.split(';');
@@ -45,7 +46,7 @@ module.exports = function (router) {
       newVote.prediction = predictions[i];
       voteArray[i] = newVote;
     }
-    
+
     Vote.create(voteArray, function(err) {
       if (err) {
         console.log(err);
@@ -60,10 +61,10 @@ module.exports = function (router) {
         }
         ee.emit('findDone');
       });
-    }); 
+    });
 
     ee.once('findDone', function(){
-      
+
       Vote.find({'eventId': parsedUrl.query.eventId}, function(err, data) {
       var result = {};
 
@@ -81,14 +82,13 @@ module.exports = function (router) {
             result[obj.questionId].yes += yes;
             result[obj.questionId].no += no;
             result[obj.questionId].total += 1;
-          }  
+          }
         });
-        
+
         res.json(result);
       });
-    }); 
+    });
   });
-
 
 //GET ROUTES
 
@@ -107,7 +107,7 @@ module.exports = function (router) {
       dataArray = data;
       ee.emit('findDone', data);
     });
-  
+
     ee.once('findDone', function(data){
       dataArray.forEach(function(val) {
         val.findUsers(function(err) {
@@ -133,7 +133,7 @@ module.exports = function (router) {
       });
       res.json(forReturn);
     });
-  
+
   });
 
   router.get('/events/:id', function (req, res) {
