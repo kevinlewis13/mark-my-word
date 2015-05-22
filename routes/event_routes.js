@@ -125,8 +125,6 @@ module.exports = function (router) {
 
     ee.once('usersDone', function(data){
       dataArray.forEach(function(val){
-        console.log(val.users);
-        console.log(Array.isArray(val.users));
          if (val.users.indexOf(req.user.uuid) === -1){
           forReturn.push(val);
         }
