@@ -65,18 +65,18 @@ module.exports = function(req,res) {
         var question = result.events[vote.eventId].questions[vote.questionId];
         question.prediction = vote.prediction;
         question.result = vote.result || null;
-
+        ee.emit('vote');
       } else {
 
         // find event by the eventId and add an event object to result.events
         ee.emit('start');
-        Event.find({'_id': vote.eventId}, function(err, thing) {
+        Event.findOne({'_id': vote.eventId}, function(err, thing) {
           if (err) {
             console.log(err);
             return res.status(500).json({msg: 'database error'})
           }
+
           var current = {};
-          thing = thing[0];
           current.home = thing.home;
           current.away = thing.away;
           current.eventTimeString = thing.eventTimeString;
@@ -90,12 +90,12 @@ module.exports = function(req,res) {
           current.questions[vote.questionId].prediction = vote.prediction;
           current.questions[vote.questionId].result = vote.result || null;
           result.events[vote.eventId] = current;
+
+
           ee.emit('done');
+          ee.emit('vote');
         });
       }
-
-      // emit vote processed event and increment voteProcessed
-      ee.emit('vote');
 
     });
 
