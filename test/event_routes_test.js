@@ -24,7 +24,8 @@ var testEvent = {
 var tomorrowEvent = {
   home:"TOMORROW",
   away:"Orioles",
-  eventTime: dateTomorrow.toString()
+  eventTime: dateTomorrow.toString(),
+  question:"Will the Orioles lose?"
 };
 
 var yesterdayEvent = {
@@ -42,7 +43,9 @@ var testUser = {
 describe('Mark My Word App Event Routes', function() {
 
   var testEventId;
+  var testQuestionId
   var testToken;
+  var testUrl;
 
   before(function(done) {
     chai.request(domain)
@@ -54,8 +57,12 @@ describe('Mark My Word App Event Routes', function() {
           return done();
         }
         testEventId = res.body._id;
+        testQuestionId = res.body.questions[0]._id;
+        testUrl = '?eventId='+testEventId+'&questionIds='+testQuestionId+'&predictions=true';
         return;
       });
+
+
       
     chai.request(domain)
       .post('/create_events')
@@ -86,6 +93,7 @@ describe('Mark My Word App Event Routes', function() {
       .post('/create_events')
       .send(testEvent)
       .end(function(err, res) {
+        console.log(res.body);
         expect(err).to.eql(null);
         expect(typeof res.body).to.eql('object');
         expect(res.body.home).to.eql('Mariners');
@@ -99,7 +107,7 @@ describe('Mark My Word App Event Routes', function() {
   it('Should return a list of events happening in the next 24 hours', function(done) {
     chai.request(domain)
       .get('/events')
-      .auth({token: testToken})
+      .send({token: testToken})
       .end(function(err, res) {
         expect(typeof res.body).to.eql('object');
         expect(res.body.length).to.eql(1);
@@ -109,9 +117,35 @@ describe('Mark My Word App Event Routes', function() {
       });
   });
 
-  // it('Should get info from a specific event', function(done) {
-  //   done();
-  // });
+  it('Should get info from a specific event', function(done) {
+    chai.request(domain)
+      .get('/events/' + testEventId)
+      .end(function(err, res) {
+        expect(typeof res.body).to.eql('object');
+        expect(res.body[0].home).to.eql('TOMORROW');
+        done();
+      })
+  });
+
+  it('Should post a question to a specific event', function(done){
+    chai.request(domain)
+      .put('/events/' + testEventId)
+      .send({question: "Will the big team win?"})
+      .end(function(err, res) {
+        expect(res.body.msg).to.eql('Put: Nailed it');
+        done();
+      })
+  });
+
+  it('Should return an object with a vote summary for the event based on a post url from the user', function(done){
+    chai.request(domain)
+      .post('./events' + testUrl)
+      .send({token: testToken})
+      .end(function(err, res) {
+        expect(typeof res).to.eql('object');
+        done();
+      })
+  });
 
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
