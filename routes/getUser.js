@@ -15,7 +15,7 @@ module.exports = function(req, res) {
     }
   };
 
-  ee.on('complete', function() {
+  ee.once('complete', function() {
     res.status(200).json(result);
   });
 
