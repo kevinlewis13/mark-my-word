@@ -43,7 +43,7 @@ var testUser = {
 describe('Mark My Word App Event Routes', function() {
 
   var testEventId;
-  var testQuestionId
+  var testQuestionId;
   var testToken;
   var testUrl;
 
@@ -124,7 +124,7 @@ describe('Mark My Word App Event Routes', function() {
         expect(typeof res.body).to.eql('object');
         expect(res.body[0].home).to.eql('TOMORROW');
         done();
-      })
+      });
   });
 
   it('Should post a question to a specific event', function(done){
@@ -134,7 +134,7 @@ describe('Mark My Word App Event Routes', function() {
       .end(function(err, res) {
         expect(res.body.msg).to.eql('Put: Nailed it');
         done();
-      })
+      });
   });
 
   it('Should return an object with a vote summary for the event based on a post url from the user', function(done){
@@ -144,7 +144,7 @@ describe('Mark My Word App Event Routes', function() {
       .end(function(err, res) {
         expect(typeof res).to.eql('object');
         done();
-      })
+      });
   });
 
   after(function(done) {
