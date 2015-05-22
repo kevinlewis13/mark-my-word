@@ -93,7 +93,6 @@ module.exports = function (router) {
         console.log(err);
         res.status(500).json({msg: 'server error'});
       }
-<<<<<<< HEAD
       dataArray = data;
       ee.emit('findDone', data);
     });
@@ -120,19 +119,6 @@ module.exports = function (router) {
           forReturn.push(val);
         }
       });
-=======
-
-      var forReturn=[];
-      var usersArray = [];
-
-      data.forEach(function(val) {
-        val.findUsers(usersArray);
-        if (usersArray.indexOf(req.user.uuid) === -1){
-          forReturn.push(val);
-        }
-      });
-
->>>>>>> master
       res.json(forReturn);
     });
 
