@@ -58,7 +58,8 @@ describe('Mark My Word App Event Routes', function() {
         }
         testEventId = res.body._id;
         testQuestionId = res.body.questions[0]._id;
-        testUrl = '?eventId='+testEventId+'&questionIds='+testQuestionId+'&predictions=true';
+        testUrl = '/events?eventId='+testEventId+'&questionIds='+testQuestionId+'&predictions=true';
+        console.log(testUrl);
         return;
       });
 
@@ -93,7 +94,6 @@ describe('Mark My Word App Event Routes', function() {
       .post('/create_events')
       .send(testEvent)
       .end(function(err, res) {
-        console.log(res.body);
         expect(err).to.eql(null);
         expect(typeof res.body).to.eql('object');
         expect(res.body.home).to.eql('Mariners');
@@ -139,10 +139,10 @@ describe('Mark My Word App Event Routes', function() {
 
   it('Should return an object with a vote summary for the event based on a post url from the user', function(done){
     chai.request(domain)
-      .post('./events' + testUrl)
+      .post(testUrl)
       .send({token: testToken})
       .end(function(err, res) {
-        expect(typeof res).to.eql('object');
+        expect(typeof res.body).to.eql('object');
         done();
       });
   });
