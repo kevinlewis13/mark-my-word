@@ -15,10 +15,8 @@ module.exports = function(req, res) {
     }
   };
 
-  ee.on('count', function() {
-    if (count === length) {
-      res.status(200).json(result);
-    }
+  ee.on('complete', function() {
+    res.status(200).json(result);
   });
 
   Vote.find({'userId': req.user.uuid}, function(err, votes) {
@@ -43,8 +41,11 @@ module.exports = function(req, res) {
           res.status(500).json({msg: 'Database error'});
         }
         result.events.push(data);
+
         count += 1;
-        ee.emit('count');
+        if (count === length) {
+          ee.emit('complete');
+        }
       });
     });
 
