@@ -52,30 +52,41 @@ module.exports = function (router) {
         console.log(err);
         return res.status(500).json({msg: 'server error'});
       }
-      // res.json({msg: 'done'})
     });
 
-    Vote.find({'eventId': parsedUrl.query.eventId}, function(err, data) {
+    Event.find({'_id': parsedUrl.query.eventId}, function(err, data){
+      data[0].findUsers(function(err) {
+        if(err){
+          console.log(err);
+        }
+        ee.emit('findDone');
+      });
+    });
+
+    ee.once('findDone', function(){
+
+      Vote.find({'eventId': parsedUrl.query.eventId}, function(err, data) {
       var result = {};
 
-      data.forEach(function(obj) {
-        var yes = 0;
-        var no = 0;
-        obj.prediction ? yes = 1 : no = 1;
-        if (!result[obj.questionId]) {
-          result[obj.questionId] = {
-            yes: yes,
-            no : no,
-            total: 1
-          };
-        } else {
-          result[obj.questionId].yes += yes;
-          result[obj.questionId].no += no;
-          result[obj.questionId].total += 1;
-        }
-      });
+        data.forEach(function(obj) {
+          var yes = 0;
+          var no = 0;
+          obj.prediction ? yes += 1 : no += 1;
+          if (!result[obj.questionId]) {
+            result[obj.questionId] = {
+              yes: yes,
+              no : no,
+              total: 1
+            };
+          } else {
+            result[obj.questionId].yes += yes;
+            result[obj.questionId].no += no;
+            result[obj.questionId].total += 1;
+          }
+        });
 
-      res.json(result);
+        res.json(result);
+      });
     });
   });
 
@@ -84,7 +95,7 @@ module.exports = function (router) {
   router.get('/events', eatAuth, function (req, res) {
     var now = Date.now();
     var dayOut = Date.now() + 86400000;
-    var dataArray = [];
+    var dataArray =[];
     var forReturn=[];
     var count = 0;
 
@@ -105,7 +116,6 @@ module.exports = function (router) {
           }
         });
         count++;
-        console.log(count);
       });
 
       if(count === dataArray.length) {
@@ -115,6 +125,8 @@ module.exports = function (router) {
 
     ee.once('usersDone', function(data){
       dataArray.forEach(function(val){
+        console.log(val.users);
+        console.log(Array.isArray(val.users));
          if (val.users.indexOf(req.user.uuid) === -1){
           forReturn.push(val);
         }

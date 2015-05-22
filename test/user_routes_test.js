@@ -43,12 +43,6 @@ describe('Mark My Word App User Routes', function() {
       });
   });
 
-  // after(function(done) {
-  //   User.findOneAndRemove({'basic.email': testUser.email}, function() {
-  //     done();
-  //   });
-  // });
-
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
       done();
