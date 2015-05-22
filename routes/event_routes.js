@@ -61,7 +61,7 @@ module.exports = function (router) {
       data.forEach(function(obj) {
         var yes = 0;
         var no = 0;
-        obj.prediction ? yes += 1 : no += 1;
+        obj.prediction ? yes = 1 : no = 1;
         if (!result[obj.questionId]) {
           result[obj.questionId] = {
             yes: yes,
@@ -113,7 +113,7 @@ module.exports = function (router) {
         }
     });
 
-    ee.on('usersDone', function(data){
+    ee.once('usersDone', function(data){
       dataArray.forEach(function(val){
          if (val.users.indexOf(req.user.uuid) === -1){
           forReturn.push(val);
