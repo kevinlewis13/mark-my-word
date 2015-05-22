@@ -13,6 +13,26 @@ var eventTracker = {
 };
 
 module.exports = function(req,res) {
+  ee.on('vote', function() {
+    eventTracker.votesProcessed += 1;
+      if (eventTracker.votesProcessed === eventTracker.votesLength &&
+        eventTracker.eventsStarted === eventTracker.eventsComplete) {
+        return res.status(200).json(result);
+      }
+  });
+
+  ee.on('start', function() {
+    eventTracker.eventsStarted += 1;
+  });
+
+  ee.on('done', function() {
+    eventTracker.eventsComplete += 1;
+    if (eventTracker.votesProcessed === eventTracker.votesLength &&
+      eventTracker.eventsStarted === eventTracker.eventsComplete) {
+      return res.status(200).json(result);
+    }
+  });
+
   var result = {};
   result.user = {};
   result.user.username = req.user.username;
@@ -50,35 +70,26 @@ module.exports = function(req,res) {
 
         // find event by the eventId and add an event object to result.events
         ee.emit('start');
-        Event.find({'eventId': vote.eventId}, function(err, event) {
+        Event.find({'_id': vote.eventId}, function(err, thing) {
           if (err) {
             console.log(err);
             return res.status(500).json({msg: 'database error'})
           }
-
-          // build an event record in our results object
-          result.events[vote.eventId] = {};
-          var current = result.events[vote.eventId];
-          current.home = event.home;
-          current.away = event.away;
-          current.timeString = event.timeString;
-          current.completed = event.completed;
-
-          // current.questions is an object that will hold all questions
-          // associated with the event keyed by id.
+          var current = {};
+          thing = thing[0];
+          current.home = thing.home;
+          current.away = thing.away;
+          current.eventTimeString = thing.eventTimeString;
           current.questions = {};
-          event.questions.forEach(function(quest) {
-            current.questions[quest._id] = {
-              question: quest.question,
-              result: quest.result || null
+          thing.questions.forEach(function(question) {
+            current.questions[question._id] = {
+              question: question.question
             };
-
           });
 
-          // add the vote information for prediction and result
           current.questions[vote.questionId].prediction = vote.prediction;
           current.questions[vote.questionId].result = vote.result || null;
-
+          result.events[vote.eventId] = current;
           ee.emit('done');
         });
       }
@@ -91,23 +102,5 @@ module.exports = function(req,res) {
   });
 };
 
-ee.on('vote', function() {
-  eventTracker.votesProcessed += 1;
-  if (eventTracker.votesProcessed === eventTracker.votesLength &&
-    eventTracker.eventsStarted === eventTracker.eventsComplete) {
-    return res.status(200).json(result);
-  }
-});
 
-ee.on('start', function() {
-  eventTracker.eventsStarted += 1;
-});
-
-ee.on('done', function() {
-  eventTracker.eventsComplete += 1;
-  if (eventTracker.votesProcessed === eventTracker.votesLength &&
-    eventTracker.eventsStarted === eventTracker.eventsComplete) {
-    return res.status(200).json(result);
-  }
-});
 
